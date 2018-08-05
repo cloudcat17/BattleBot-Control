@@ -1,7 +1,7 @@
-/* 
+ /* 
   Cardboard BattleBot Control Firmware
   Copyright (c) 2016-17 Jeff Malins. All rights reserved.
-  
+  Modified 20180803 to support continuous rotation servos instead of DC motors while retaining the same user interface. 
 */
 
 #include <ESP8266WiFi.h>
@@ -244,7 +244,6 @@ void webSocketMessage(String msg) {
   //DBG_OUTPUT_PORT.printf("[%u] send message: %s\n", _activeClient->id(), msg.c_str());
   _activeClient->text(msg.c_str());
 }
-
 /********************************************************************************
  * Hardware Control                                                             *
  *  Handle control of robot hardware based on calls to the web API.             *
@@ -252,28 +251,34 @@ void webSocketMessage(String msg) {
 
 // map motor driver channels //
 #define PIN_R_PWM   PIN_PWM_A   // A is right      //
-#define PIN_R_DIR   PIN_DIR_A   // high is forward //
+#define PIN_R_DIR   PIN_DIR_A   // Not needed, could be used for other IO
 
 #define PIN_L_PWM   PIN_PWM_B   // B is left       //
-#define PIN_L_DIR   PIN_DIR_B   // high is forward //
+#define PIN_L_DIR   PIN_DIR_B   // Not needed, could be used for other IO
+
+#define WHEEL_BACK_USEC 1000
+#define WHEEL_CENTER_USEC 1500
+#define WHEEL_FWD_USEC 2000
 
 // use D5 for WIFI override //
 #define PIN_WIFI_AP_MODE  PIN_D5
 
 // use D6 for weapon ESC //
 #define PIN_WEAPON_ESC  PIN_D6
-#define ESC_MIN_USEC    900
-#define ESC_MAX_USEC    1800
+#define ESC_MIN_USEC    1000 //400
+#define ESC_MAX_USEC    2000 //2400
 
 Servo weaponESC;
+Servo leftWheel;
+Servo rightWheel;
 
 // configure the hardware //
 void setupHardware() {
   // motor control pins to output //
-  pinMode(PIN_L_PWM, OUTPUT);
-  pinMode(PIN_L_DIR, OUTPUT);
-  pinMode(PIN_R_PWM, OUTPUT);
-  pinMode(PIN_R_DIR, OUTPUT);
+  leftWheel.attach(PIN_R_PWM);
+  leftWheel.writeMicroseconds(WHEEL_CENTER_USEC);
+  rightWheel.attach(PIN_L_PWM);
+  rightWheel.writeMicroseconds(WHEEL_CENTER_USEC);
 
   // LED to output //
   pinMode(PIN_LED2, OUTPUT);
@@ -285,6 +290,8 @@ void setupHardware() {
   weaponESC.attach(PIN_WEAPON_ESC);
   weaponESC.writeMicroseconds(ESC_MIN_USEC);
 }
+
+
 
 // get the debugging LED //
 bool getStatusLED() {
@@ -300,22 +307,28 @@ void setStatusLED(bool active) {
 bool getWiFiForceAPMode() {
   return !digitalRead(PIN_WIFI_AP_MODE);
 }
-
 // set power to the wheels //
 void setWheelPower(int left, int right) {
   left  = constrain(left,  -1023, 1023);
+  left = map(left, -1023, 1023, WHEEL_BACK_USEC, WHEEL_FWD_USEC);
   right = constrain(right, -1023, 1023);
+//  right = map(right, -1023, 1023, WHEEL_BACK_USEC, WHEEL_FWD_USEC);
+  right = map(right, -1023, 1023, WHEEL_FWD_USEC, WHEEL_BACK_USEC);
 
   if(PRINT_TO_SERIAL_MONITOR) {
     DBG_OUTPUT_PORT.printf("left: %d, right: %d", left, right);
   }
   
-  digitalWrite(PIN_L_DIR, left >= 0);
-  digitalWrite(PIN_R_DIR, right >= 0);
+//  digitalWrite(PIN_L_DIR, left >= 0);
+//  digitalWrite(PIN_R_DIR, right >= 0);
   
-  analogWrite(PIN_L_PWM, abs(left));
-  analogWrite(PIN_R_PWM, abs(right));
+//  analogWrite(PIN_L_PWM, abs(left));
+//  analogWrite(PIN_R_PWM, abs(right));
+  leftWheel.writeMicroseconds(left);
+  rightWheel.writeMicroseconds(right);
+
 }
+
 
 // set the weapon power //
 void setWeaponPower(int power) {  
