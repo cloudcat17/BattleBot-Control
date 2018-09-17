@@ -5,15 +5,51 @@ well-documented: Arduino, HTML5 and javascript. The hope is to leverage common m
 
 #### Platform specifications: ####
 
- 1. NodeMCU (ESP-12E module with ESP8266 controller) and motor shield / breakout board. Available 
-    [here](https://www.aliexpress.com/item/NodeMCU-Development-Kit-NodeMCU-Motor-Shield-esp-wifi-esp8266-esp-12e-esp-12e-kit-diy-rc/32445659965.html).
- 2. Two ubiquitous, cheap Chinese motor modules (UCCMMs). Available
-    [here](https://www.aliexpress.com/item/HK-POST-FREE-Wholesale-48-1-Plastic-DC-Drive-Gear-Motor-Tyre-Tire-Wheel-For/32603795906.html). An improved quality, domestically sourced alternative with [motors](https://www.servocity.com/right-angle-gearmotor) and [wheels](https://www.servocity.com/2-55-press-fit-wheels) purchased separately.
- 3. 6 AA battery holder, such as [this one](https://www.aliexpress.com/item/10-PCS-6AA-Battery-Case/32675020506.html). Rechargeable NiMH batteries are highly recommended, as battery life is 1-2 hours on Alkaline cells.
- 4. Arduino core libraries for the [ESP8266](http://esp8266.github.io/Arduino/versions/2.3.0/doc/libraries.html#mdns-and-dns-sd-responder-esp8266mdns-library). 
- 5. Control over WiFi from a mobile device or computer via a browser-based user interface.
- 6. Cardboard robot body, ranging from a simple box, to a laser cut design from CAD. 
-  
+ 1. Arduino core libraries for the [ESP8266](http://esp8266.github.io/Arduino/versions/2.3.0/doc/libraries.html#mdns-and-dns-sd-responder-esp8266mdns-library). 
+ 2. Control over WiFi from a mobile device or computer via a browser-based user interface.
+ 3. Cardboard robot body, ranging from a simple box, to a laser cut design from CAD. And using these parts from our local friendly supplier, <a href="http://www.addicore.com">Addicor</a>:
+<table width="497">
+<tbody>
+<tr>
+<td width="65" data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Part #&quot;}">Part #</td>
+<td width="237" data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Component&quot;}">Component</td>
+<td width="65" data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Qty&quot;}">Qty</td>
+<td width="65" data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Price&quot;}">Price</td>
+<td width="65" data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Price&quot;}">Amount</td>
+</tr>
+<tr>
+<td><a href="https://www.addicore.com/SearchResults.asp?Search=AD313">AD313</a></td>
+<td>AA 4-Battery Case with Power Switch</td>
+<td>1</td>
+<td>$2.00</td>
+<td>$2.00</td>
+</tr>
+<tr>
+<td><a href="https://www.addicore.com/SearchResults.asp?Search=AD318">AD318</a></td>
+<td>ESP8266 D1 Mini WiFi Dev Board</td>
+<td>1</td>
+<td>$6.99</td>
+<td>$6.99</td>
+</tr>
+<tr>
+<td><a href="https://www.addicore.com/SearchResults.asp?Search=AD314">AD314</a></td>
+<td>FEETECH (Fitec) FS90R Continuous Rotation Servo (9g)</td>
+<td>2</td>
+<td>$4.84</td>
+<td>$9.68</td>
+</tr>
+<tr>
+<td><a href="https://www.addicore.com/SearchResults.asp?Search=AD315">AD315</a></td>
+<td>Wheel for FS90R Servo (60x8mm)</td>
+<td>2</td>
+<td>$2.35</td>
+<td>$4.70</td>
+</tr>
+</tbody>
+</table>
+You will need 4 AA batteries preferably rechargeable. The code changes to support continuous rotation servos are available here:
+<a href="https://github.com/jmalins/BattleBot-Control/commit/280f2298b714cd0c336709d402ff6675941e800f">https://github.com/jmalins/BattleBot-Control/commit/280f2298b714cd0c336709d402ff6675941e800f</a>
+
 The goal is to keep the cost of a base "kit" to under 20USD.
 
  #### Reference CAD: ####
