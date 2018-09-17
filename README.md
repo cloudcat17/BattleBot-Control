@@ -48,9 +48,9 @@ well-documented: Arduino, HTML5 and javascript. The hope is to leverage common m
 </tbody>
 </table>
 You will need 4 AA batteries preferably rechargeable. The code changes to support continuous rotation servos are available here:
-<a href="https://github.com/jmalins/BattleBot-Control/commit/280f2298b714cd0c336709d402ff6675941e800f">https://github.com/jmalins/BattleBot-Control/commit/280f2298b714cd0c336709d402ff6675941e800f</a>
+<a href="https://github.com/JamesNewton/BattleBot-Control/tree/patch-2">https://github.com/JamesNewton/BattleBot-Control/tree/patch-2</a>
 
-The goal is to keep the cost of a base "kit" to under 20USD.
+The goal is to keep the cost of a base "kit" to under 35USD.
 
  #### Reference CAD: ####
  To aid in ideation and your designs, reference CAD files are provided for standard Kit of Parts hardware and a handful of reference designs:
