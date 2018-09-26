@@ -21,7 +21,7 @@ for a basic robot setup. Subsequent sections describe the development environmen
 #### Installation steps: ####
 
  1. Download and install the [Arduino IDE](https://www.arduino.cc/en/Main/Software). 
- 2. Install the ESP8266 devtools add-on. Directions [here](http://www.instructables.com/id/Programming-the-ESP8266-12E-using-Arduino-software/?ALLSTEPS). TODO: include custom directions that also explain the quirks of getting to work on OS X, Linux.
+ 2. Install the ESP8266 devtools add-on. Directions [here](http://www.instructables.com/id/Programming-the-ESP8266-12E-using-Arduino-software/?ALLSTEPS). In the Arduino IDE, go to File / Preferences, and under "Additional Boards Manager URLs:" add "http://arduino.esp8266.com/stable/package_esp8266com_index.json". Then under Tools / Boards / Boards Manager, and filter by ESP8266 and install the support files. TODO: include custom directions that also explain the quirks of getting to work on OS X, Linux.
  3. Install the ESP8266FS file system upload add-on. Directions [here](http://esp8266.github.io/Arduino/versions/2.3.0/doc/filesystem.html).
 
 #### Loading the firmware: ####
