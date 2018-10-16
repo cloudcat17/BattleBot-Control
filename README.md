@@ -3,6 +3,8 @@ This software is a simple, low-cost control system for the cardboard BattleBot c
 skill levels, from young students to advanced adult makers. Therefore, the chosen platform and technologies are common and 
 well-documented: Arduino, HTML5 and javascript. The hope is to leverage common maker skills or build them in inexperienced participants.
 
+*Note: This is the old standard, DC motor, tank control version. For the standard tank control with continuous rotation servos, as seen at Comicon Museum during Maker Faire 2018, please switch to the [Patch-2 branch](https://github.com/JamesNewton/BattleBot-Control/tree/patch-2)*
+
 #### Platform specifications: ####
 
  1. NodeMCU (ESP-12E module with ESP8266 controller) and motor shield / breakout board. Available 
