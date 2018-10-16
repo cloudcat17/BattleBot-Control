@@ -1,13 +1,15 @@
-# BattleBot-Control #
+# BattleBot-Control SERVO#
 This software is a simple, low-cost control system for the cardboard BattleBot community project. The project must support all 
 skill levels, from young students to advanced adult makers. Therefore, the chosen platform and technologies are common and 
 well-documented: Arduino, HTML5 and javascript. The hope is to leverage common maker skills or build them in inexperienced participants.
+
+*Note: This is the old reliable tank control version, updated to use continuous rotation servos, with Addicore parts and directions that match those used at the Comic-Con Museum during San Diego Maker Faire 2018.*
 
 #### Platform specifications: ####
 
  1. Arduino core libraries for the [ESP8266](http://esp8266.github.io/Arduino/versions/2.3.0/doc/libraries.html#mdns-and-dns-sd-responder-esp8266mdns-library). 
  2. Control over WiFi from a mobile device or computer via a browser-based user interface.
- 3. Cardboard robot body, ranging from a simple box, to a laser cut design from CAD. And using these parts from our local friendly supplier, <a href="http://www.addicore.com">Addicor</a>:
+ 3. Cardboard robot body, ranging from a simple box, to a laser cut design from CAD. And using these parts from our local friendly supplier, <a href="http://www.addicore.com">Addicore</a>:
 <table width="497">
 <tbody>
 <tr>
@@ -26,7 +28,7 @@ well-documented: Arduino, HTML5 and javascript. The hope is to leverage common m
 </tr>
 <tr>
 <td><a href="https://www.addicore.com/SearchResults.asp?Search=AD318">AD318</a></td>
-<td>ESP8266 D1 Mini WiFi Dev Board</td>
+<td>ESP8266 D1 Mini WiFi Dev Board. If you buy the [cardboard combat kit](https://www.addicore.com/Cardboard-Sumo-Bot-AddiKit-p/ad494.htm) from Addicore, the board will come pre-loaded</td>
 <td>1</td>
 <td>$6.99</td>
 <td>$6.99</td>
@@ -59,6 +61,29 @@ The goal is to keep the cost of a base "kit" to under 35USD.
   * [Cardboard NewBot 2.0](https://cad.onshape.com/documents/af9a7cdc337296dac2031b55/w/f0c41006ebab68369c4ddb37/e/c21df5e57a729a578fc1df88) A revised, simpler NewBot designed for a workshop at the Bay Area Maker Faire. 
   * [Cardboard NewBot 1.0](https://cad.onshape.com/documents/f0340e1790b5a8dc21cf42b3/w/84b5d7791762dae47618e688/e/1b6152b64cf9e13c0b862c89) - A rectangular "box" robot made with tab and slot construction. Upon testing with actual kids (of many ages), this bot was discovered to be too hard to assemble.
   * ["(BOX) Factory of Sadness"](https://cad.onshape.com/documents/e8cde76fb8fa97701da61992/w/c29f61e2e364ccd29e25da63/e/e3f6378e05fc7aa48f5b6eb2) - A wedge-bot design with kill saw and 3D printed parts.
+  * The SUMO bot shape is simple enough that the files were just drawn in the laser cutter software. At some point, we should probably re-create them in CAD. Let us know if you can help.
+  
+### Assembly ###
+*All the needed parts*<BR>
+<img src="pics/image1.jpg">
+
+*Cardboard joined with hotglue*<BR>
+<img src="pics/image2.jpg">
+
+*Extra hotglue ready for servo*<BR>
+<img src="pics/image3.jpg">
+
+*Servo mounted*<BR>
+<img src="pics/image4.jpg">
+
+*Servos and board mounted*<BR>
+<img src="pics/image5.jpg">
+
+*Servos connected to D1 and D2. Brown on outside, yellow/orange inside*<BR>
+<img src="pics/image6.jpg">
+ 
+*Battery pack connected, Red to +, Black to -*<BR>
+<img src="pics/image7.jpg">
 
 ## Basic Setup ##
 This section describes the minimum steps needed to load this firmware onto your NodeMCU. The firmware should work out of the box
