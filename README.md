@@ -27,11 +27,11 @@ well-documented: Arduino, HTML5 and javascript. The hope is to leverage common m
 <td>$2.00</td>
 </tr>
 <tr>
-<td><a href="https://www.addicore.com/SearchResults.asp?Search=AD318">AD318</a></td>
-<td>ESP8266 D1 Mini WiFi Dev Board. If you buy the [cardboard combat kit](https://www.addicore.com/Cardboard-Sumo-Bot-AddiKit-p/ad494.htm) from Addicore, the board will come pre-loaded</td>
+<td><a href="https://www.addicore.com/Boffintronics-RoboBoffin-Mini-p/ad495.htm">AD495</a></td>
+<td>ESP8266 based Addicore Boffintronics-RoboBoffin-Mini. If you buy the [cardboard combat kit](https://www.addicore.com/Cardboard-Sumo-Bot-AddiKit-p/ad494.htm) from Addicore, the board will come pre-loaded</td>
 <td>1</td>
-<td>$6.99</td>
-<td>$6.99</td>
+<td>$12.50</td>
+<td>$12.50</td>
 </tr>
 <tr>
 <td><a href="https://www.addicore.com/SearchResults.asp?Search=AD314">AD314</a></td>
