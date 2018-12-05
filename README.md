@@ -28,7 +28,8 @@ well-documented: Arduino, HTML5 and javascript. The hope is to leverage common m
 </tr>
 <tr>
 <td><a href="https://www.addicore.com/Boffintronics-RoboBoffin-Mini-p/ad495.htm">AD495</a></td>
-<td>ESP8266 based Addicore Boffintronics-RoboBoffin-Mini. If you buy the [cardboard combat kit](https://www.addicore.com/Cardboard-Sumo-Bot-AddiKit-p/ad494.htm) from Addicore, the board will come pre-loaded</td>
+<td>ESP8266 based Addicore Boffintronics-RoboBoffin-Mini. 
+ If you buy the <a href="https://www.addicore.com/Cardboard-Sumo-Bot-AddiKit-p/ad494.htm">cardboard combat kit</a> from Addicore, the board will come pre-loaded and you get the cardboard pre-cut</td>
 <td>1</td>
 <td>$12.50</td>
 <td>$12.50</td>
