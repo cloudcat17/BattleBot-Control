@@ -102,12 +102,12 @@ for a basic robot setup. Subsequent sections describe the development environmen
 
 #### Loading the firmware: ####
 
- 1. Download this entire repository to your Arduino projects directory. Make sure the containing folder is called 'BattleBot-Control' (by default, GitHub will name the zip 'Battlebot-Control-\<branch name>').
- 2. Open `BattleBot-Control.ino` in the Arduino IDE.
+ 1. Download this entire repository to your Arduino projects directory. Make sure the containing folder is called 'BattleBot-Control' (by default, GitHub will name the zip 'Battlebot-Control-\<branch name>' so you must rename it to remove the branch name).
+ 2. Open `BattleBot-Control.ino` in the Arduino IDE. Verify you have the extra tabs with the .h files. 
  3. Ensure the following settings are set in the "Tools" menu:
    * Board: "NodeMCU 1.0 (ESP-12E Module)"
    * CPU Frequency: "80 MHz"
-   * Flash Size: "4M (3M SPIFFS)"
+   * Flash Size: "4M (3M SPIFFS)" (note 3M vs 1M)
    * Upload Speed: "115200"
    * Choose correct serial port for module
  4. Run "Tools" > "ESP8266 Sketch Data Upload" to initialize the file system and load the HTML / javascript user interface
@@ -127,6 +127,10 @@ After the default firmware is loaded, the robot should be drivable. In the defau
    * You may need to explicitly type `http://` before the URL or IP to connect, as some browsers will assume `https://`, which is not supported.
  3. Enjoy.
  
+If you are using the latest code, you should find a set of up / down trim buttons for the left and right servos under the gear icon, upper left. Those settings are not saved, because they will change as the batteries run down.
+
+You can override of default animal bot name from MAC address by adding a "botname.txt" file. E.g. if data/botname.txt contains "mybot" then that will be the SSID of the bot. See onboard editor below.
+ 
 ## Development Setup ##
 Connecting to the robot access point is inconvenient for development, since it generally precludes using the internet at the same time. For development, an alternative configuration is provided. In this setup, the robot will connect to an existing WiFi network. The development machine also connects to this network, making the robot and internet available at the same time.
 
@@ -142,7 +146,7 @@ The robot will attempt to connect to the configured network for 10 seconds. If t
 
 You can also force the robot to use AP mode by grounding pin D5 during startup (i.e. connect pins 'D' and 'G' of column 5 on the GPIO header strip and press RESET). This feature is useful if you inadvertently connect to a network, only to discover it has firewall rules preventing machine to machine communication.
 
-To load the file on the robot, you can either reload the entire file system with the "ESP8266 Sketch Data Upload", or follow an alternative faster procedure:
+To load the file on the robot, you can either reload the entire file system with the "ESP8266 Sketch Data Upload", or use the onboard editor (see below) or follow an alternative command line procedure:
 
  1. Connect to the robot in the default access point (AP) mode.
  2. Open a shell and navigate to base project directory, the one with this file in it.
@@ -187,3 +191,31 @@ Note, if the robot is in the driving state and the client becomes disconnected, 
 #### Serial Monitor: ####
 The robot emits various debugging messages over the USB serial connection. These can be observed from the Arduino IDE or in a dedicated serial terminal. The baud rate is 115200.
 
+#### OnBoard Editor: ####
+
+[commit be24561](https://github.com/JamesNewton/BattleBot-Control/commit/be24561132c2e594de97ca201a90ee68bbbe8c94) adds the missing ace.js file to the data folder which enables onboard editing of files even when no internet connection is available. e.g. the user is connected directly to the bot's access point ssid. An easy link to the editor has been added under the gear icon. 
+
+The user name and password are `admin` and `admin`. 
+
+The file list on the left shows files currently in the SPIFFS system, and you can click on any of them to edit. Press `Save` to save.
+
+To create a new file, enter it's name at the top center, and press `create`. A new file will be shown with a strange red dot as the only text in the edit window. Be sure to delete that as you enter text. 
+
+TODO: This little edit feature in the ESPAsyncWebServer is a very hidden gem. It should be better documented:
+- https://github.com/me-no-dev/ESPAsyncWebServer/issues/102 (shows the command bar in a different language)
+- https://github.com/me-no-dev/ESPAsyncWebServer/tree/master/examples/ESP_AsyncFSBrowser
+- https://ace.c9.io/ (the actual editor code used)
+
+#### Animations: ####
+
+[commit be24561](https://github.com/JamesNewton/BattleBot-Control/commit/be24561132c2e594de97ca201a90ee68bbbe8c94) adds playback of .json files. The format is: `[delayms, [left:right:weapon]]` where the inner array can be repeated as needed. e.g. `[500, [100,-100,0],[100,100,0],[-100,100,0]]` would jog to the right (half second turn right, forward, turn left). You can't change the delay between entries, which is specified in milliseconds.
+
+- Trigger playback by sending /body=/filename. e.g. http://192.168.4.1/body=/1 will play back /1.json from SPIFFS.
+- Trigger playback by sending /filename into serial port. do NOT send carriage return or line feed. TODO: Use readStringUntil('\r') instead?
+- Trigger playback of 0.json (followed by 1.json, 2.json, etc...) anytime the bot is not activly recieving sockets. This implements an "attract" mode, and allows more complex animations to happen automatically on power up. This supports it's use for wagging tales, wiggling ears, moving gears on a steampunk hat, etc... Don't add 0.json if you don't want this. Long / slow animations may cause issues (this hasn't been well tested). 
+
+A file circles.html was added to calculate sin/cos values to move standard servos in a jerky approximation of circular motion. As with any .html file, it's accessable at /circles.html. e.g. http://192.168.4.1/circles.html Copy the results into a .json file.
+
+This example shows possible uses outside the bot setup, e.g. to wag a tail driven by two standard servos in a jerky circle. Other .html files can be added with Javascript to e.g. calculate an animation that wags a tail, or wiggles ears, or moves gears on a stempunk top hat, etc... 
+
+Future: Simpler user interfaces could be added which actually write the .json file back to SPIFFS from the web page (no copy / edit / create / paste cycle required). The standard controls might also be monitored to record them. 
