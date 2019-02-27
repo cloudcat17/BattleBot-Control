@@ -191,7 +191,7 @@ Note, if the robot is in the driving state and the client becomes disconnected, 
 #### Serial Monitor: ####
 The robot emits various debugging messages over the USB serial connection. These can be observed from the Arduino IDE or in a dedicated serial terminal. The baud rate is 115200.
 
-#### OnBoard Editor: ####
+### OnBoard Editor: ###
 
 [commit be24561](https://github.com/JamesNewton/BattleBot-Control/commit/be24561132c2e594de97ca201a90ee68bbbe8c94) adds the missing ace.js file to the data folder which enables onboard editing of files even when no internet connection is available. e.g. the user is connected directly to the bot's access point ssid. An easy link to the editor has been added under the gear icon. 
 
@@ -206,7 +206,7 @@ TODO: This little edit feature in the ESPAsyncWebServer is a very hidden gem. It
 - https://github.com/me-no-dev/ESPAsyncWebServer/tree/master/examples/ESP_AsyncFSBrowser
 - https://ace.c9.io/ (the actual editor code used)
 
-#### Animations: ####
+### Animations: ###
 
 [commit be24561](https://github.com/JamesNewton/BattleBot-Control/commit/be24561132c2e594de97ca201a90ee68bbbe8c94) adds playback of .json files. The format is: `[delayms, [left:right:weapon]]` where the inner array can be repeated as needed. e.g. `[500, [100,-100,0],[100,100,0],[-100,100,0]]` would jog to the right (half second turn right, forward, turn left). You can't change the delay between entries, which is specified in milliseconds.
 
