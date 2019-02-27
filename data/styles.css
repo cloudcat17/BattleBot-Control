@@ -81,6 +81,7 @@ body {
   cursor: pointer;
   filter: invert(100%)
 }
+.button { font-size: 110%; }
 #settings {
   box-sizing: border-box;
   padding: 1vh;

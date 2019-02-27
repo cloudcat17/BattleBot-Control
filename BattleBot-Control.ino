@@ -22,7 +22,7 @@
  ********************************************************************************/
  
 #define HTTP_PORT       80
-#define HOST_NAME       "battlebot"
+#define HOST_NAME       "sdmgbot"
 #define AP_SSID_BASE    "robot-"
 #define USE_ANIMAL      true
 
@@ -33,6 +33,11 @@
 // set to true to print commands to the serial monitor for debugging //
 #define PRINT_TO_SERIAL_MONITOR  false
 
+//Trim servos
+#define TRIM_ADJ 10
+int leftTrim;
+int rightTrim;
+
 // states //
 enum RobotState {
   STATE_START = 1,
@@ -42,6 +47,10 @@ enum RobotState {
   STATE_DRIVING,
   STATE_DRIVING_WITH_TIMEOUT
 };
+
+String playback;
+File playfile;
+int playdo;
 
 // function prototypes //
 void enterState(RobotState);
@@ -63,7 +72,9 @@ bool getWiFiForceAPMode();
  *  SSID:password                                                               *
  ********************************************************************************/
 
-#define WIFI_CONFIG_FILE "/wifi.config"
+#define WIFI_CONFIG_FILE "/wifi.txt"
+
+#define NAME_CONFIG_FILE "/botname.txt"
 
 // configure and connect to wifi //
 void setupWiFi() {
@@ -115,15 +126,24 @@ void setupWiFi() {
     WiFi.softAPmacAddress(mac);
     ssid = AP_SSID_BASE;
     if(USE_ANIMAL) {
-      // lookup an animal from table based on MAC bytes //
-      int animalNum = (mac[5] << 8 | mac[4]) % ANIMAL_COUNT;
-      ssid += FPSTR(ANIMAL_TABLE[animalNum]);
-    } else {
+      if(SPIFFS.exists(NAME_CONFIG_FILE)) {
+        DBG_OUTPUT_PORT.println("Name configuration found");
+        File file = SPIFFS.open(NAME_CONFIG_FILE, "r");
+        ssid = file.readString();
+        file.close();
+        }
+      else {
+        // lookup an animal from table based on MAC bytes //
+        int animalNum = (mac[5] << 8 | mac[4]) % ANIMAL_COUNT;
+        ssid += FPSTR(ANIMAL_TABLE[animalNum]);
+        }
+      } 
+    else {
       // use MAC address in hex //
       for(int i = 5; i >= 0; i--) {
         ssid += String(mac[i], HEX);
+       }
       }
-    }
 
     DBG_OUTPUT_PORT.println("Starting AP, SSID: " + ssid);
     WiFi.mode(WIFI_AP);
@@ -157,26 +177,65 @@ void handleControlPut(AsyncWebServerRequest *request) {
   DBG_OUTPUT_PORT.println("END control put");*/
   
   // should have a POST body //
-  if(request->hasParam("body")) {
+  if(request->hasParam("body")) { //using PUT but getting param from URL (?)
     enterState(STATE_DRIVING_WITH_TIMEOUT);
     
     String body = request->getParam("body")->value();
-    //DBG_OUTPUT_PORT.println("handleControlPut: " + body);
-
-    int index = body.indexOf(":"), index2 = body.indexOf(":", index + 1);
-    int i = body.substring(0, index).toInt();
-    int j = (index2 >= 0)? 
-      body.substring(index + 1, index2).toInt(): 
-      body.substring(index + 1).toInt();  
-    int k = (index2 >= 0)? 
-      body.substring(index2 + 1).toInt(): 
-      0;
-  
-    setWheelPower(i, j);
-    setWeaponPower(k);
-      
+    // DBG_OUTPUT_PORT.println("handleControlPut: " + body);
+    switch(body.charAt(0)) {
+    case '/': //playback a sequence
+       DBG_OUTPUT_PORT.print("Playback:");
+       if(SPIFFS.exists(body+".json")) {
+        playfile = SPIFFS.open(body+".json", "r");
+        }
+       else {
+        DBG_OUTPUT_PORT.println(body+".json not found");
+        }
+      break;
+    case 'T': //trim left / right servos
+      DBG_OUTPUT_PORT.print("Trim");
+      if ('L' == body.charAt(1)) {
+        DBG_OUTPUT_PORT.print(" Left");
+        if ('-' == body.charAt(2)) {
+          DBG_OUTPUT_PORT.print(" Down ");
+          leftTrim -= TRIM_ADJ;
+          }
+        else {
+          DBG_OUTPUT_PORT.print(" Up ");
+          leftTrim += TRIM_ADJ;
+          }
+        DBG_OUTPUT_PORT.println(leftTrim);
+        }
+      if ('R' == body.charAt(1)) {
+        DBG_OUTPUT_PORT.print(" Right");
+        if ('-' == body.charAt(2)) {
+          DBG_OUTPUT_PORT.print(" Down ");
+          rightTrim -= TRIM_ADJ;
+          }
+        else {
+          DBG_OUTPUT_PORT.print(" Up ");
+          rightTrim += TRIM_ADJ;
+          }
+        DBG_OUTPUT_PORT.println(rightTrim);
+        }
+      setWheelPower(0,0); //test the trim
+      break;
+    default: 
+      int index = body.indexOf(":"), index2 = body.indexOf(":", index + 1);
+      int i = body.substring(0, index).toInt();
+      int j = (index2 >= 0)? 
+        body.substring(index + 1, index2).toInt(): 
+        body.substring(index + 1).toInt();  
+      int k = (index2 >= 0)? 
+        body.substring(index2 + 1).toInt(): 
+        0;
+    
+      setWheelPower(i, j);
+      setWeaponPower(k);
+      break;
+    }
     request->send(200, "text/plain", "ok");
-  } else {
+  } else { //body is required
     request->send(400);
   }  
 }
@@ -274,11 +333,13 @@ Servo rightWheel;
 
 // configure the hardware //
 void setupHardware() {
+  leftTrim = 0;
+  rightTrim = 0;
   // motor control pins to output //
   leftWheel.attach(PIN_R_PWM);
-  leftWheel.writeMicroseconds(WHEEL_CENTER_USEC);
+  leftWheel.writeMicroseconds(WHEEL_CENTER_USEC + leftTrim);
   rightWheel.attach(PIN_L_PWM);
-  rightWheel.writeMicroseconds(WHEEL_CENTER_USEC);
+  rightWheel.writeMicroseconds(WHEEL_CENTER_USEC + rightTrim);
 
   // LED to output //
   pinMode(PIN_LED2, OUTPUT);
@@ -324,8 +385,8 @@ void setWheelPower(int left, int right) {
   
 //  analogWrite(PIN_L_PWM, abs(left));
 //  analogWrite(PIN_R_PWM, abs(right));
-  leftWheel.writeMicroseconds(left);
-  rightWheel.writeMicroseconds(right);
+  leftWheel.writeMicroseconds(left + leftTrim);
+  rightWheel.writeMicroseconds(right + rightTrim);
 
 }
 
@@ -348,17 +409,17 @@ void setWeaponPower(int power) {
 //
 //  positive values are forward 
 void updateHardware(String cmd) {
-  int index = cmd.indexOf(":"), index2 = cmd.indexOf(":", index + 1);
-  int leftPower  = cmd.substring(0, index).toInt();
-  int rightPower = (index2 >= 0)? 
-    cmd.substring(index + 1, index2).toInt(): 
-    cmd.substring(index + 1).toInt();  
-  int weaponPower = (index2 >= 0)? 
-    cmd.substring(index2 + 1).toInt(): 
-    0;
-  
-  setWheelPower(leftPower, rightPower);
-  setWeaponPower(weaponPower);
+    int index = cmd.indexOf(":"), index2 = cmd.indexOf(":", index + 1);
+    int leftPower  = cmd.substring(0, index).toInt();
+    int rightPower = (index2 >= 0)? 
+      cmd.substring(index + 1, index2).toInt(): 
+      cmd.substring(index + 1).toInt();  
+    int weaponPower = (index2 >= 0)? 
+      cmd.substring(index2 + 1).toInt(): 
+      0;
+    
+    setWheelPower(leftPower, rightPower);
+    setWeaponPower(weaponPower);
 }
 
 /********************************************************************************
@@ -414,7 +475,14 @@ void runStateMachine() {
       if (millis() > _stateDelay) {
         setStatusLED(!getStatusLED());
         _stateDelay = millis() + (getStatusLED()? 100: 2000);
-      }
+        if (!getStatusLED() && playback.length()==0) {
+          if(SPIFFS.exists("/"+String(playdo)+".json")) {
+            playfile = SPIFFS.open("/"+String(playdo)+".json", "r");
+            playdo++;
+            }
+          else { playdo = 0; }
+          }
+        }
       break;
     case STATE_DRIVING_WITH_TIMEOUT:
       // check for timeout, if expired, stop driving //
@@ -452,6 +520,8 @@ void setup(void){
   DBG_OUTPUT_PORT.print("\n");
   DBG_OUTPUT_PORT.setDebugOutput(true);
 
+  playdo=0;
+  
   enterState(STATE_SETUP);
   runStateMachine();
   
@@ -489,7 +559,49 @@ void setup(void){
   DBG_OUTPUT_PORT.println("HTTP server started");
   enterState(STATE_IDLE);
 }
- 
+
+long playbackDelay;
+long playbackSpeed;
 void loop(void){
-  runStateMachine();
-}
+  int i;
+  if (Serial.available() > 0) {
+    String body = Serial.readString();
+    DBG_OUTPUT_PORT.println(body+".json");
+    if(SPIFFS.exists(body+".json")) {
+      playfile = SPIFFS.open(body+".json", "r");
+      } else { DBG_OUTPUT_PORT.println("not found"); }
+    }
+  if (playfile) {
+      playback = playfile.readString();
+      playfile.close();
+      if ('[' == playback.charAt(0)) {
+        playback.remove(0,1);
+        }
+      playbackSpeed = playback.toInt();
+      int i = playback.indexOf('[');
+      playback.remove(0,i);
+      DBG_OUTPUT_PORT.println("Play");
+      playbackDelay = 0;
+    };
+  if (playback.length() > 0) {
+    if (millis() > playbackDelay) {
+      playbackDelay = millis() + playbackSpeed;
+      // send heartbeat back to client during playback every 500ms //
+      webSocketMessage("heartbeat");
+      DBG_OUTPUT_PORT.println(".");
+      if ('[' == playback.charAt(0)) {
+        int i = playback.indexOf(']');
+        if (i > 0) {
+          DBG_OUTPUT_PORT.println(playback.substring(1,i));
+          updateHardware(playback.substring(1,i));
+          playback.remove(0,i+1);
+          int i = playback.indexOf('['); //find next record
+          if (i > 0) {playback.remove(0,i);} //skip crap 
+          }
+        else { playback = ""; }
+        }
+      else { playback = ""; }
+      }
+    }
+  else { runStateMachine(); }
+  }
