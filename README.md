@@ -29,7 +29,7 @@ well-documented: Arduino, HTML5 and javascript. The hope is to leverage common m
 <tr>
 <td><a href="https://www.addicore.com/Boffintronics-RoboBoffin-Mini-p/ad495.htm">AD495</a></td>
 <td>ESP8266 based Addicore Boffintronics-RoboBoffin-Mini. 
- If you buy the <a href="https://www.addicore.com/Cardboard-Sumo-Bot-AddiKit-p/ad494.htm">cardboard combat kit</a> from Addicore, the board will come pre-loaded and you get the cardboard pre-cut. If you like to solder, you can use a cheaper NodeMCU and <a href="https://jamesnewton.github.io/class/presentESP8266servo.html#4">build a servo header</a></td>
+ If you buy the <a href="https://www.addicore.com/Cardboard-Sumo-Bot-AddiKit-p/ad494.htm">cardboard combat kit</a> from Addicore, the board will come pre-loaded and you get the cardboard pre-cut. If you really like to solder, you can use a cheaper <a href="https://www.google.com/search?q=nodemcu">NodeMCU</a> and <a href="https://jamesnewton.github.io/class/presentESP8266servo.html#4">build a servo header (not easy!)</a></td>
 <td>1</td>
 <td>$12.50</td>
 <td>$12.50</td>
