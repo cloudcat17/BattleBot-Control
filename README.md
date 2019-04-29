@@ -29,7 +29,7 @@ well-documented: Arduino, HTML5 and javascript. The hope is to leverage common m
 <tr>
 <td><a href="https://www.addicore.com/Boffintronics-RoboBoffin-Mini-p/ad495.htm">AD495</a></td>
 <td>ESP8266 based Addicore Boffintronics-RoboBoffin-Mini. 
- If you buy the <a href="https://www.addicore.com/Cardboard-Sumo-Bot-AddiKit-p/ad494.htm">cardboard combat kit</a> from Addicore, the board will come pre-loaded and you get the cardboard pre-cut</td>
+ If you buy the <a href="https://www.addicore.com/Cardboard-Sumo-Bot-AddiKit-p/ad494.htm">cardboard combat kit</a> from Addicore, the board will come pre-loaded and you get the cardboard pre-cut. If you like to solder, you can use a cheaper NodeMCU and <a href="https://jamesnewton.github.io/class/presentESP8266servo.html#4">build a servo header</a></td>
 <td>1</td>
 <td>$12.50</td>
 <td>$12.50</td>
@@ -91,6 +91,9 @@ This section describes the minimum steps needed to load this firmware onto your 
 for a basic robot setup. Subsequent sections describe the development environment for customizing the firmware.
 
 #### Installation steps: ####
+
+For easier step by step instructions and short lessons on programming see:<br>
+https://jamesnewton.github.io/class/presentESP8266blink.html#1
 
  1. Download and install the [Arduino IDE](https://www.arduino.cc/en/Main/Software). 
  2. Install the ESP8266 devtools add-on. Directions [here](http://www.instructables.com/id/Programming-the-ESP8266-12E-using-Arduino-software/?ALLSTEPS). In the Arduino IDE, go to File / Preferences, and under "Additional Boards Manager URLs:" add "http://arduino.esp8266.com/stable/package_esp8266com_index.json". Then under Tools / Boards / Boards Manager, and filter by ESP8266 and install the support files. OS X users must install serial port drivers. 
