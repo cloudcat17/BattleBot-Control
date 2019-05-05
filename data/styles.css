@@ -50,6 +50,7 @@ body {
   margin-left: 20vw;
   font-size: 3vh;
   padding-top: 1vh;
+  white-space: pre;
 }
 
 #settings-toggle {
