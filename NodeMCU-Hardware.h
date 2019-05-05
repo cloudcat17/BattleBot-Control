@@ -37,6 +37,10 @@
 #define PIN_PWM_B PIN_D2
 #define PIN_DIR_B PIN_D4    // high for forward //
 
+// Ping //
+#define PIN_PING PIN_D7 // Ping Trigger
+#define PIN_ECHO PIN_D8 // 
+
 /**
  * For reference, the motor sheild board also has the following connections.
  **/
