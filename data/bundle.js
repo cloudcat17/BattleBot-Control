@@ -885,6 +885,7 @@ var WebSocketConnection = (function (Connection$$1) {
     this.socket.onmessage = function (event) {
       this$1.pingTimeMs = new Date().getTime() - this$1.startTimeMs
       this$1.setResponseData(event.data)
+      //console.log(event.data)
     }
     this.socket.onclose = function (event) {
       if (this$1.state !== Connection$$1.ERROR) {
@@ -985,7 +986,13 @@ function setConnectionState (state) {
   statusText.innerText = state
 }
 function setConnectionInfo (conn) {
-  infoBox.innerText = "Ping: " + ((conn.pingTimeMs !== null) ? ((conn.pingTimeMs) + " ms") : '----')
+  //console.log(conn.getResponseData())
+  infoBox.botStatus = JSON.parse(conn.getResponseData())
+  infoBox.innerText = "Ping:" + ((conn.pingTimeMs !== null) ? ((conn.pingTimeMs) + "ms ") : '---- ') 
+    + "\n " + infoBox.botStatus.cm + "cm "
+    + infoBox.botStatus.D3 + infoBox.botStatus.D4 + infoBox.botStatus.D5
+    + " " + infoBox.botStatus.msg
+  
 }
 var getHardwareConfig = new Promise(function (resolve, reject) { return ajaxGet('./hardware.json', function (err, resp) {
     if (err) { return reject(err) }
