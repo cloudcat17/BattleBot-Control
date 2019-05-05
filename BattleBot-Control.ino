@@ -10,6 +10,7 @@
 #include <ESPAsyncWebServer.h>
 #include <FS.h>
 #include <SPIFFSEditor.h>
+#include <NewPingESP8266.h>
 
 #include <stdlib.h>
 #include <Servo.h>
@@ -29,6 +30,9 @@
 /********************************************************************************
  * Globals                                                                      *
  ********************************************************************************/
+#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). 
+//Maximum sensor distance is rated at 400-500cm.
+long lastping;
 
 // set to true to print commands to the serial monitor for debugging //
 #define PRINT_TO_SERIAL_MONITOR  false
@@ -296,13 +300,6 @@ void onWSEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
   }
 }
 
-// set a message to the active web socket //
-// used for heartbeat to client app       //
-void webSocketMessage(String msg) {
-  if(!_activeClient) return;
-  //DBG_OUTPUT_PORT.printf("[%u] send message: %s\n", _activeClient->id(), msg.c_str());
-  _activeClient->text(msg.c_str());
-}
 /********************************************************************************
  * Hardware Control                                                             *
  *  Handle control of robot hardware based on calls to the web API.             *
@@ -331,8 +328,11 @@ Servo weaponESC;
 Servo leftWheel;
 Servo rightWheel;
 
+NewPingESP8266 sonar(PIN_PING, PIN_ECHO, MAX_DISTANCE);
+
 // configure the hardware //
 void setupHardware() {
+  lastping = 0;
   leftTrim = 0;
   rightTrim = 0;
   // motor control pins to output //
@@ -345,6 +345,10 @@ void setupHardware() {
   pinMode(PIN_LED2, OUTPUT);
   setStatusLED(false);
 
+  // PING //
+  pinMode(PIN_PING, OUTPUT); // TRIGGER
+  pinMode(PIN_ECHO, INPUT);  // ECHO
+  
   // WiFi override //
   pinMode(PIN_WIFI_AP_MODE, INPUT_PULLUP);
 
@@ -474,8 +478,11 @@ void runStateMachine() {
       // chirp blink //
       if (millis() > _stateDelay) {
         setStatusLED(!getStatusLED());
-        _stateDelay = millis() + (getStatusLED()? 100: 2000);
-        if (!getStatusLED() && playback.length()==0) {
+        _stateDelay = millis() + (getStatusLED()? 100: 400);
+        if (getStatusLED()) { 
+          webSocketMessage("idle");
+          }
+        else if (playback.length()==0) {
           if(SPIFFS.exists("/"+String(playdo)+".json")) {
             playfile = SPIFFS.open("/"+String(playdo)+".json", "r");
             playdo++;
@@ -496,9 +503,9 @@ void runStateMachine() {
       if (millis() > _stateDelay) {
         setStatusLED(!getStatusLED());
         _stateDelay = millis() + 500;
-        
+
         // send heartbeat back to client //
-        webSocketMessage("heartbeat");
+        webSocketMessage("driving");
       }
       break;
   }
@@ -514,6 +521,24 @@ void runStateMachine() {
 AsyncWebServer server(HTTP_PORT);
 AsyncWebSocket ws("/ws");
 
+// set a message to the active web socket //
+// used for heartbeat to client app       //
+void webSocketMessage(String msg) {
+  if(!_activeClient) return;
+  lastping = sonar.ping_cm();
+  //DBG_OUTPUT_PORT.println(String(lastping));
+  //not D1(right), D2(left), D6(weapon), D7(Ping), D8(Echo), D9(RX), D10(TX). 
+  msg = "{\"msg\":\"" + msg + "\""
+    + ",\"cm\":" + String(lastping) 
+    + ",\"D3\":" + String(digitalRead(PIN_D3)) //Read D3(GPIO0)
+    + ",\"D4\":" + String(digitalRead(PIN_D4)) //Read D4(GPIO2)
+    + ",\"D5\":" + String(digitalRead(PIN_D5)) //Read D5(GPIO14)
+    + ",\"ir\":" + "\"\""
+    + "}"
+    ;
+  //DBG_OUTPUT_PORT.printf("[%u] send message: %s\n", _activeClient->id(), msg.c_str());
+  _activeClient->text(msg.c_str());
+  }
 void setup(void){
   // configure debug serial port //
   DBG_OUTPUT_PORT.begin(DBG_BAUD_RATE);
@@ -566,7 +591,7 @@ void loop(void){
   int i;
   if (Serial.available() > 0) {
     String body = Serial.readString();
-    DBG_OUTPUT_PORT.println(body+".json");
+    DBG_OUTPUT_PORT.println(body);
     if(SPIFFS.exists(body+".json")) {
       playfile = SPIFFS.open(body+".json", "r");
       } else { DBG_OUTPUT_PORT.println("not found"); }
@@ -587,7 +612,7 @@ void loop(void){
     if (millis() > playbackDelay) {
       playbackDelay = millis() + playbackSpeed;
       // send heartbeat back to client during playback every 500ms //
-      webSocketMessage("heartbeat");
+      webSocketMessage("playback");
       DBG_OUTPUT_PORT.println(".");
       if ('[' == playback.charAt(0)) {
         int i = playback.indexOf(']');
@@ -604,4 +629,4 @@ void loop(void){
       }
     }
   else { runStateMachine(); }
-  }
+}
