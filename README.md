@@ -3,7 +3,9 @@ This software is a simple, low-cost control system for the cardboard BattleBot c
 skill levels, from young students to advanced adult makers. Therefore, the chosen platform and technologies are common and 
 well-documented: Arduino, HTML5 and javascript. The hope is to leverage common maker skills or build them in inexperienced participants.
 
-*Note: This is the old reliable tank control version, updated to use continuous rotation servos, with Addicore parts and directions that match those used at the Comic-Con Museum during San Diego Maker Faire 2018.*
+*Note: This is the stick control version, updated to use continuous rotation servos, with Addicore parts and directions that match those used at the Comic-Con Museum during San Diego Maker Faire 2018.*
+
+NEW: Updated bodies, animation playback, onboard webdev, and support for ultrasonic "PING" sensors, robot status, and the state of IO pins D3, D4, and D5 have now been added. See below:
 
 #### Platform specifications: ####
 
@@ -168,11 +170,12 @@ The default firmware assumes a certain robot hardware / wiring configuration.
 
 #### Wiring: ####
 
- * Motor channel A -> Right motor (as judged from *behind* the robot)
- * Motor channel B -> Left motor (as judged from *behind* the robot)
- * Motors should be wired so that a positive voltage on the A+/B+ terminal produces *forward* motion.
-
-Get this wrong and the robot will not drive as expected with the default control interface.
+ * PIN_D2 -> Right continuous rotation servo (as judged from *behind* the robot)
+ * PIN_D3 -> Left continuous rotation servo (as judged from *behind* the robot)
+ * PIN_D6 -> Weapon ESC or servo
+ * PIN_D7 -> PING sensor "Trigger" or "Ping" pin
+ * PIN_D8 <- Level shifter <- PING sensor "Echo" pin. The level shift can be just a resistor divider: "Echo" pin to 1K ohm, to PIN_D8 and also to a 1.2K ohm resistor to ground. Failure to shift the level will destroy the ESP-8266. 
+ * PIN_D3-5 <- Digital inputs. (untested) For whiskers, etc... Note: D5 must be disconnected on startup.
 
 #### Status LED: ####
 
@@ -218,3 +221,16 @@ A file circles.html was added to calculate sin/cos values to move standard servo
 This example shows possible uses outside the bot setup, e.g. to wag a tail driven by two standard servos in a jerky circle. Other .html files can be added with Javascript to e.g. calculate an animation that wags a tail, or wiggles ears, or moves gears on a stempunk top hat, etc... 
 
 Future: Simpler user interfaces could be added which actually write the .json file back to SPIFFS from the web page (no copy / edit / create / paste cycle required). The standard controls might also be monitored to record them. 
+
+### Sensors ###
+
+Starting with the commits made 2019/05/04 Bw/U you can connect a PING sensor (see "Wiring" above) and the range will be delivered back to the network connected device as an '.botStatus' attribute in the "info-box" span in index.html. So you can edit robot.js or even just index.html (see "OnBoard Editor") to add scripts that grab that data and use it to make decisions and eventually, send commands to the robot. e.g.
+
+````Javascript
+var infoBox = document.getElementById('info-box')
+console.log( infoBox.botStatus.cm + "cm "
+    + infoBox.botStatus.D3 + infoBox.botStatus.D4 + infoBox.botStatus.D5
+    + " " + infoBox.botStatus.msg
+  )
+````
+TODO: Document how to trigger a message to the robot via the bundle.js system. 
