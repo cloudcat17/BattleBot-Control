@@ -99,6 +99,7 @@ https://jamesnewton.github.io/class/presentESP8266blink.html#1
  4. Install Arduino networking libraries. Currently, these are not available in the Library Manager and must be installed manually. Directions for installing Arduino libraries are available [here](https://www.arduino.cc/en/guide/libraries).
    * [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP)
    * [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
+   * [NewPingESP8266](https://github.com/jshaw/NewPingESP8266)
  5. The NodeMCU typically has an CP210x usb to serial chip, but to save money the manufacturer might have used a CH340 or CH341 chip. Windows will generally automatically find the driver, but if it doesn't: Identify the chip on your board by looking at the markings on the chip. The chip should can be just in front of the usb port. [CH340 and CH341 driver](https://blog.sengotta.net/signed-mac-os-driver-for-winchiphead-ch340-serial-bridge/) and [CP210x driver](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx#mac).
 
 #### Loading the firmware: ####
