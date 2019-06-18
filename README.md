@@ -180,7 +180,7 @@ The default firmware assumes a certain robot hardware / wiring configuration.
  * PIN_D3 -> Left continuous rotation servo (as judged from *behind* the robot)
  * PIN_D6 -> Weapon ESC or servo
  * PIN_D7 -> PING sensor "Trigger" or "Ping" pin
- * PIN_D8 <- Level shifter <- PING sensor "Echo" pin. The level shift can be just a resistor divider: "Echo" pin to 1K ohm, to PIN_D8 and also to a 1.2K ohm resistor to ground. Failure to shift the level will destroy the ESP-8266. 
+ * PIN_D8 <- Level shifter <- PING sensor "Echo" pin. The level shift can be just a resistor divider: "Echo" pin to 2K2 ohm, to PIN_D8 and from there to a 10K ohm resistor to ground. Failure to shift the level will destroy the ESP-8266. 
  * PIN_D3-5 <- Digital inputs. (untested) For whiskers, etc... Note: D5 must be disconnected on startup.
 
 #### Status LED: ####
