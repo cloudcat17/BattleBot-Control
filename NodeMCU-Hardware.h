@@ -37,9 +37,18 @@
 #define PIN_PWM_B PIN_D2
 #define PIN_DIR_B PIN_D4    // high for forward //
 
+// use D6 for weapon ESC //
+#define PIN_WEAPON_ESC  PIN_D6
+
 // Ping //
 #define PIN_PING PIN_D7 // Ping Trigger
-#define PIN_ECHO PIN_D8 // 
+#define PIN_ECHO PIN_D5 // Ping Echo back
+//can't use D8 for echo: must be low on start or ESP will try to boot from external SD Card.
+
+// IO Pins //
+#define PIN_IO_1 PIN_D3 // If not needed for Motor A direction
+#define PIN_IO_2 PIN_D4 // If not needed for Motor B direction
+#define PIN_IO_3 PIN_D8 // CAUTION: D8 must start low! Use only for sensor that pulls the pin up
 
 /**
  * For reference, the motor sheild board also has the following connections.
