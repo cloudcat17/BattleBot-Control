@@ -990,7 +990,7 @@ function setConnectionInfo (conn) {
   infoBox.botStatus = JSON.parse(conn.getResponseData())
   infoBox.innerText = "Ping:" + ((conn.pingTimeMs !== null) ? ((conn.pingTimeMs) + "ms ") : '---- ') 
     + "\n " + infoBox.botStatus.cm + "cm "
-    + infoBox.botStatus.D3 + infoBox.botStatus.D4 + infoBox.botStatus.D5
+    + infoBox.botStatus.IO1 + infoBox.botStatus.IO2 + infoBox.botStatus.IO3
     + " " + infoBox.botStatus.msg
   
 }
