@@ -5,7 +5,7 @@ well-documented: Arduino, HTML5 and javascript. The hope is to leverage common m
 
 *Note: This is the stick control version, updated to use continuous rotation servos, with Addicore parts and directions that match those used at the Comic-Con Museum during San Diego Maker Faire 2018.*
 
-NEW: Updated bodies, animation playback, onboard webdev, and support for ultrasonic "PING" sensors, robot status, and the state of IO pins D3, D4, and D5 have now been added. See below:
+NEW: Updated bodies, animation playback, onboard webdev, and support for ultrasonic "PING" sensors, robot status, and the state of IO pins D3, D4, and D8 have now been added. See below:
 
 #### Platform specifications: ####
 
@@ -176,12 +176,12 @@ The default firmware assumes a certain robot hardware / wiring configuration.
 
 #### Wiring: ####
 
- * PIN_D2 -> Right continuous rotation servo (as judged from *behind* the robot)
- * PIN_D3 -> Left continuous rotation servo (as judged from *behind* the robot)
+ * PIN_D1 -> Right continuous rotation servo (as judged from *behind* the robot)
+ * PIN_D2 -> Left continuous rotation servo (as judged from *behind* the robot)
  * PIN_D6 -> Weapon ESC or servo
  * PIN_D7 -> PING sensor "Trigger" or "Ping" pin
- * PIN_D8 <- Level shifter <- PING sensor "Echo" pin. The level shift can be just a resistor divider: "Echo" pin to 2K2 ohm, to PIN_D8 and from there to a 10K ohm resistor to ground. Failure to shift the level will destroy the ESP-8266. 
- * PIN_D3-5 <- Digital inputs. (untested) For whiskers, etc... Note: D5 must be disconnected on startup.
+ * PIN_D5 <- Level shifter <- PING sensor "Echo" pin. The level shift can be just a resistor divider: "Echo" pin to 2K2 ohm, to PIN_D8 and from there to a 10K ohm resistor to ground. Failure to shift the level might destroy the ESP-8266. _but it hasn't yet!_
+ * PIN_D3,4,8 <- Digital inputs. (untested) For whiskers, etc... Note: D8 must be low on startup. Use a sensor that only goes high when triggered and make sure it isn't triggered right away. 
 
 #### Status LED: ####
 
@@ -235,7 +235,7 @@ Starting with the commits made 2019/05/04 Bw/U you can connect a PING sensor (se
 ````Javascript
 var infoBox = document.getElementById('info-box')
 console.log( infoBox.botStatus.cm + "cm "
-    + infoBox.botStatus.D3 + infoBox.botStatus.D4 + infoBox.botStatus.D5
+    + infoBox.botStatus.IO1 + infoBox.botStatus.IO2 + infoBox.botStatus.IO3
     + " " + infoBox.botStatus.msg
   )
 ````
