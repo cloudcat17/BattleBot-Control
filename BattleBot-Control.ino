@@ -1,8 +1,14 @@
  /* 
   Cardboard BattleBot Control Firmware
   Copyright (c) 2016-17 Jeff Malins. All rights reserved.
-  Modified 20180803 to support continuous rotation servos instead of DC motors while retaining the same user interface. 
+  20180803 to support continuous rotation servos instead of DC motors while retaining the same user interface. 
+  20190207 add ACE.js editor for upload / edit of files on the bot via browser, add playback of .json files
+  20190504 add support for PING sensor and IO pins. 
 */
+
+// Tools / Board / NodeMCU 1.0 (ESP-12E Module)
+// Tools / Port / (whatever it shows up as)
+// Tools / Flash Size / 4M (3M SPIFFS)
 
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
@@ -46,8 +52,8 @@ int rightTrim;
 enum RobotState {
   STATE_START = 1,
   STATE_SETUP,
-  STATE_CONNECT,
-  STATE_IDLE,
+  STATE_CONNECT, //trying to connect to WiFi router
+  STATE_IDLE, //stopped getting commands, don't move unless playback
   STATE_DRIVING,
   STATE_DRIVING_WITH_TIMEOUT
 };
@@ -319,8 +325,6 @@ void onWSEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
 // use D5 for WIFI override //
 #define PIN_WIFI_AP_MODE  PIN_D5
 
-// use D6 for weapon ESC //
-#define PIN_WEAPON_ESC  PIN_D6
 #define ESC_MIN_USEC    1000 //400
 #define ESC_MAX_USEC    2000 //2400
 
@@ -524,19 +528,18 @@ AsyncWebSocket ws("/ws");
 // set a message to the active web socket //
 // used for heartbeat to client app       //
 void webSocketMessage(String msg) {
-  if(!_activeClient) return;
   lastping = sonar.ping_cm();
+  if(!_activeClient) return;
   //DBG_OUTPUT_PORT.println(String(lastping));
-  //not D1(right), D2(left), D6(weapon), D7(Ping), D8(Echo), D9(RX), D10(TX). 
   msg = "{\"msg\":\"" + msg + "\""
     + ",\"cm\":" + String(lastping) 
-    + ",\"D3\":" + String(digitalRead(PIN_D3)) //Read D3(GPIO0)
-    + ",\"D4\":" + String(digitalRead(PIN_D4)) //Read D4(GPIO2)
-    + ",\"D5\":" + String(digitalRead(PIN_D5)) //Read D5(GPIO14)
+    + ",\"IO1\":" + String(digitalRead(PIN_IO_1)) //See NodeMCU-Hardware for pin assignments
+    + ",\"IO2\":" + String(digitalRead(PIN_IO_2))
+    + ",\"IO3\":" + String(digitalRead(PIN_IO_3))
     + ",\"ir\":" + "\"\""
     + "}"
     ;
-  //DBG_OUTPUT_PORT.printf("[%u] send message: %s\n", _activeClient->id(), msg.c_str());
+  //DBG_OUTPUT_PORT.printf("[%u] msg: %s\n", _activeClient->id(), msg.c_str());
   _activeClient->text(msg.c_str());
   }
 void setup(void){
