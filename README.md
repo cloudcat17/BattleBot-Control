@@ -143,7 +143,7 @@ Connecting to the robot access point is inconvenient for development, since it g
 
 To prevent hard-coding the network credentials in the source code, WiFi configuration is accomplished via a configuration file uploaded to the robot file system in the `data/` directory of this project.
 
-data/wifi.config:
+data/wifi.txt:
 ```
 network_ssid:password
 ```
@@ -151,7 +151,9 @@ That is, the SSID of the network to connect to and the password, on one line, se
 
 The robot will attempt to connect to the configured network for 10 seconds. If the connection can't be established it will fall back to AP mode. See the *Status LED* section below. 
 
-You can also force the robot to use AP mode by grounding pin D5 during startup (i.e. connect pins 'D' and 'G' of column 5 on the GPIO header strip and press RESET). This feature is useful if you inadvertently connect to a network, only to discover it has firewall rules preventing machine to machine communication.
+You can also force the robot to use AP mode by grounding pin D5 during startup (i.e. connect pins 'D' and 'G' of column 5 on the GPIO header strip and press RESET). This feature is useful if you inadvertently connect to a network, only to discover it has firewall rules preventing machine to machine communication. 
+ 
+ Note that because of a lack of pins, D5 is also used as the input from the ping sensor (see below) and so this must be temporarily disconnected on startup to allow station mode. 
 
 To load the file on the robot, you can either reload the entire file system with the "ESP8266 Sketch Data Upload", or use the onboard editor (see below) or follow an alternative command line procedure:
 
@@ -218,7 +220,7 @@ TODO: This little edit feature in the ESPAsyncWebServer is a very hidden gem. It
 
 [commit be24561](https://github.com/JamesNewton/BattleBot-Control/commit/be24561132c2e594de97ca201a90ee68bbbe8c94) adds playback of .json files. The format is: `[delayms, [left:right:weapon]]` where the inner array can be repeated as needed. e.g. `[500, [100,-100,0],[100,100,0],[-100,100,0]]` would jog to the right (half second turn right, forward, turn left). You can't change the delay between entries, which is specified in milliseconds.
 
-- Trigger playback by sending /body=/filename. e.g. http://192.168.4.1/body=/1 will play back /1.json from SPIFFS.
+- Trigger playback by doing a PUT to /control?body=/filename. e.g. /control?body=/1 will play back /1.json from SPIFFS. In the index.html file, in the settings div, you can add a line like `<input type="button" class="button" value=" 1 " onClick="ajaxPut('/control?body=/1', '', 500, function (err, resp) {});">` and then pressing that button will playback animation 1.
 - Trigger playback by sending /filename into serial port. do NOT send carriage return or line feed. TODO: Use readStringUntil('\r') instead?
 - Trigger playback of 0.json (followed by 1.json, 2.json, etc...) anytime the bot is not activly recieving sockets. This implements an "attract" mode, and allows more complex animations to happen automatically on power up. This supports it's use for wagging tales, wiggling ears, moving gears on a steampunk hat, etc... Don't add 0.json if you don't want this. Long / slow animations may cause issues (this hasn't been well tested). 
 
