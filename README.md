@@ -241,4 +241,16 @@ console.log( infoBox.botStatus.cm + "cm "
     + " " + infoBox.botStatus.msg
   )
 ````
-TODO: Document how to trigger a message to the robot via the bundle.js system. 
+In the robot.js file, the `loop` function is called whenever the controller senses a new touch from the drive page served by index.html. You can cause that loop function to be called even when the control screen isn't being touched, by adding an interval line. e.g. `setInterval(fireUpdate,100)` The number is in milliseconds, so 100 will make it fire 10 times a second. In the loop, we can look at the controls and the data from the robot Ping sensor, and use that to "influence" the control input to, for example, avoid collisions. e.g. 
+
+````Javascript
+  var dist = infoBox.botStatus.cm
+  if (dist === undefined || dist < 3 || dist > 200) dist = 200
+  var avoid = (tooClose - dist) * 0.02
+  if (avoid < 0) avoid = 0
+  if (dist < tooClose) console.log(avoid, driveStick.x)
+  // handle driving //
+  var speed = driveStick.y
+  var rotation = driveStick.x + avoid
+````
+Note that it is important to manage bad data from the ping sensor. And because the loop is always sending commands, the robot will never leave "driving" state or go into "idle". The actual code in robot.js tries to detect sensor and won't start updating unless the sensor is present, and some command is given to get started. E.g. setting trim so the motors are always moving foward which makes the robot try to move but avoid obsticals. 
