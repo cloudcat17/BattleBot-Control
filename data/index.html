@@ -24,7 +24,12 @@
           <input type="button" class="button" value="&lt;" onClick="ajaxPut('/control?body=TR-', '', 500, function (err, resp) {});">
           <input type="button" class="button" value="&gt;" onClick="ajaxPut('/control?body=TR+', '', 500, function (err, resp) {});">
           Right
-          <P></P><A HREF="/edit">Edit</A>
+          <P><A HREF="/edit" target="_blank">Edit</A></P>
+          <P>Animate: 
+           <input type="button" class="button" value=" 1 " onClick="ajaxPut('/control?body=/1', '', 500, function (err, resp) {});">
+           <input type="button" class="button" value=" 2 " onClick="ajaxPut('/control?body=/2', '', 500, function (err, resp) {});">
+           <input type="button" class="button" value=" 3 " onClick="ajaxPut('/control?body=/3', '', 500, function (err, resp) {});">
+          </P>
           </div>
       </div>
       <ul id='error-box'></ul>
