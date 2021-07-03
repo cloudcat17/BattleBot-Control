@@ -153,7 +153,7 @@ The robot will attempt to connect to the configured network for 10 seconds. If t
 
 You can also force the robot to use AP mode by grounding pin D5 during startup (i.e. connect pins 'D' and 'G' of column 5 on the GPIO header strip and press RESET). This feature is useful if you inadvertently connect to a network, only to discover it has firewall rules preventing machine to machine communication. 
  
- Note that because of a lack of pins, D5 is also used as the input from the ping sensor (see below) and so this must be temporarily disconnected on startup to allow station mode. 
+*Note that because of a lack of pins, D5 is also used as the input from the ping sensor (see below) and so this must be temporarily disconnected on startup to allow station mode.*
 
 To load the file on the robot, you can either reload the entire file system with the "ESP8266 Sketch Data Upload", or use the onboard editor (see below) or follow an alternative command line procedure:
 
@@ -161,13 +161,13 @@ To load the file on the robot, you can either reload the entire file system with
  2. Open a shell and navigate to base project directory, the one with this file in it.
  3. Run this command in the shell:
 ```
-$ ./upload.sh wifi.config
+$ ./upload.sh wifi.txt
 ```
 This command will upload any file (relative to the root of the `data/` directory) to the robot file system.
 
 When complete, reset the robot. The robot should now connect to the WiFi network specified in the file. To return to access point mode, simply delete the configuration file and reload the file system, or use the abreviated command (as above):
 ```
-$ ./delete.sh wifi.config
+$ ./delete.sh wifi.txt
 ```
 This command will delete a file from the robot file system.
 
