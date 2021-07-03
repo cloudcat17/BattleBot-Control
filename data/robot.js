@@ -43,13 +43,23 @@ function setup () {
   forwardButton.style = 'blue'
   forwardButton.groupName = 'weaponGroup'
   forwardButton.pressed = true
+  
+  infoBox.botStatus = {}
 }
+
+const tooClose = 15
 
 // this is run at update rate //
 function loop () {
+  //var infoBox = document.getElementById('info-box')
+  var dist = infoBox.botStatus.cm
+  if (dist === undefined || dist < 3 || dist > 200) dist = 200
+  var avoid = (tooClose - dist) * 0.02
+  if (avoid < 0) avoid = 0
+  if (dist < tooClose) console.log(avoid, driveStick.x)
   // handle driving //
   var speed = driveStick.y
-  var rotation = driveStick.x
+  var rotation = driveStick.x + avoid
   arcadeDrive.setSpeedAndRotation(speed, rotation)
   
   // handle weapon control //
@@ -67,3 +77,4 @@ function loop () {
   }
 }
 
+setInterval(fireUpdate,100) //even when not being touched, do occasional updates, which calls the loop
