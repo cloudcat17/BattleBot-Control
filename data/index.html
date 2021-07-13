@@ -17,20 +17,84 @@
           <img id='settings-img' src='settings-128.png' alt='Settings' />
         </label>
         <div id='settings'>
-          Trim:<BR>
+          Trim:<BR />
           <input type="button" class="button" value="&lt;" onClick="ajaxPut('/control?body=TL-', '', 500, function (err, resp) {});">
           <input type="button" class="button" value="&gt;" onClick="ajaxPut('/control?body=TL+', '', 500, function (err, resp) {});">
-          Left<BR>
+          Left<BR />
           <input type="button" class="button" value="&lt;" onClick="ajaxPut('/control?body=TR-', '', 500, function (err, resp) {});">
           <input type="button" class="button" value="&gt;" onClick="ajaxPut('/control?body=TR+', '', 500, function (err, resp) {});">
           Right
           <P><A HREF="/edit" target="_blank">Edit</A></P>
-          <P>Animate: 
+          <!-- commented out, animate isn't required for our project -CMG
+            <P>Animate: 
            <input type="button" class="button" value=" 1 " onClick="ajaxPut('/control?body=/1', '', 500, function (err, resp) {});">
            <input type="button" class="button" value=" 2 " onClick="ajaxPut('/control?body=/2', '', 500, function (err, resp) {});">
            <input type="button" class="button" value=" 3 " onClick="ajaxPut('/control?body=/3', '', 500, function (err, resp) {});">
-          </P>
-          </div>
+          </P> -->
+            <div id="form"><!-- Playstation 4 controller form -->
+                <form action="/" target="_self" method="post">
+                    <label for="hexset">Enter PS4 Bluetooth MAC:</label><br />
+                    <input type="text" name="hexset" maxlength="2" size="2">
+                    <input type="text" name="hexset" maxlength="2" size="2">
+                    <input type="text" name="hexset" maxlength="2" size="2">
+                    <input type="text" name="hexset" maxlength="2" size="2">
+                    <input type="text" name="hexset" maxlength="2" size="2">
+                    <input type="text" name="hexset" maxlength="2" size="2"><br />
+                    <input type="submit">
+                </form>
+            </div>
+            <div id="controls"><!-- settings -->
+                <p>Control Settings</p>
+                <ul>
+                    <ul>Drive Controls
+                        <li>Left</li>
+                        <li>Center</li>
+                        <li>Right</li>
+                        <li>2 Stick Tank Drive</li>
+                    </ul><br />
+                    <ul>Weapon Settings
+                        <li>Off</li>
+                        <li>Left</li>
+                        <li>Right</li>
+                        <li>Weapon Control Type Settings
+                            <ul>
+                                <li>Mono Directional Weapon Control</li>
+                                <li>Bi Directional Weapon Control</li>
+                            </ul>
+                        </li>
+                    </ul><br />
+                    <ul>Bot Inversion Control
+                        <li>Off</li>
+                        <li>Centered</li>
+                        <li>Left</li>
+                        <li>Right</li>
+                        <li>Reverse Weapon Direction
+                            <ul>
+                                <li>Yes</li>
+                                <li>No</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </ul>
+            </div>
+            <div>
+                <p>Channel Settings</p>
+                <ul>
+                    <ul>Left Channel
+                        <li>Normal</li>
+                        <li>Reversed</li>
+                    </ul><br />
+                    <ul>Right Channel
+                        <li>Normal</li>
+                        <li>Reversed</li>
+                    </ul><br />
+                    <ul>Weapon Channel
+                        <li>Normal</li>
+                        <li>Reversed</li>
+                    </ul>
+                </ul>
+            </div>
+         </div>
       </div>
       <ul id='error-box'></ul>
       <canvas id='touch-canvas' ></canvas>

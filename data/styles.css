@@ -98,6 +98,7 @@ body {
   height: 95vh;
   top: 0.75vh;
   right: 9.4vh;
+    overflow: scroll;
 }
 
 #error-box {
