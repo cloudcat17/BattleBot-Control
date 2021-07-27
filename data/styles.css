@@ -101,6 +101,22 @@ body {
     overflow: scroll;
 }
 
+fieldset {
+    border-radius: 1.5vh;
+}
+
+legend {
+    font-size: 60%;
+}
+
+input[type="text"]:focus, input[type="text"]:hover {
+    background-color: bisque;
+}
+
+input[type="submit"]:hover {
+    background-color: bisque;
+}
+
 #error-box {
   box-sizing: border-box;
   position: absolute;

@@ -33,14 +33,17 @@
           </P> -->
             <div id="form"><!-- Playstation 4 controller form -->
                 <form action="/" target="_self" method="post">
-                    <label for="hexset">Enter PS4 Bluetooth MAC:</label><br />
-                    <input type="text" name="hexset" maxlength="2" size="2">
-                    <input type="text" name="hexset" maxlength="2" size="2">
-                    <input type="text" name="hexset" maxlength="2" size="2">
-                    <input type="text" name="hexset" maxlength="2" size="2">
-                    <input type="text" name="hexset" maxlength="2" size="2">
-                    <input type="text" name="hexset" maxlength="2" size="2"><br />
-                    <input type="submit">
+                    <fieldset>
+                        <legend>Enter PS4 Bluetooth MAC:</legend>
+                        <!--<label for="hexset"></label><br /> -->
+                        <label><input type="text" name="hexset" maxlength="2" size="2" required="required"></label>
+                        <label><input type="text" name="hexset" maxlength="2" size="2" required="required"></label>
+                        <label><input type="text" name="hexset" maxlength="2" size="2" required="required"></label>
+                        <label><input type="text" name="hexset" maxlength="2" size="2" required="required"></label>
+                        <label><input type="text" name="hexset" maxlength="2" size="2" required="required"></label>
+                        <label><input type="text" name="hexset" maxlength="2" size="2" required="required"></label><br>
+                        <label><input type="submit" name="submit" value="Submit"></label>
+                    </fieldset>
                 </form>
             </div>
             <div id="controls"><!-- settings -->
